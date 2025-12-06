@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products Display</title>
+    <style>
+        table { border-collapse: collapse; width: 80%; margin: 20px auto; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+        .error { color: red; text-align: center; padding: 20px; }
+        .info { color: green; text-align: center; padding: 20px; }
+        .container { width: 90%; margin: 0 auto; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Products Display</h1>
+        
+        {% if error %}
+            <div class="error">
+                <h2>Error</h2>
+                <p>{{ error }}</p>
+            </div>
+        {% elif info %}
+            <div class="info">
+                <p>{{ info }}</p>
+            </div>
+        {% endif %}
+        
+        {% if products %}
+            <p>Source: {{ source|upper }} | Total products: {{ products|length }}</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in products %}
+                    <tr>
+                        <td>{{ product.id }}</td>
+                        <td>{{ product.name }}</td>
+                        <td>{{ product.category }}</td>
+                        <td>${{ "%.2f"|format(product.price) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% elif not error and not info %}
+            <div class="error">
+                <p>No products to display</p>
+            </div>
+        {% endif %}
+        
+        <div style="text-align: center; margin-top: 30px;">
+            <h3>Test URLs:</h3>
+            <p><a href="/products?source=json">All JSON products</a></p>
+            <p><a href="/products?source=csv">All CSV products</a></p>
+            <p><a href="/products?source=json&id=1">JSON product ID 1</a></p>
+            <p><a href="/products?source=csv&id=2">CSV product ID 2</a></p>
+            <p><a href="/products?source=xml">Invalid source (xml)</a></p>
+            <p><a href="/products?source=json&id=99">Non-existent ID</a></p>
+        </div>
+    </div>
+</body>
+</html>
